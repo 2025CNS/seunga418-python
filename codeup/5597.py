@@ -1,0 +1,6 @@
+all_students = set(range(1, 31))
+submitted = set(int(input()) for _ in range(28))
+missing = list(all_students - submitted)
+missing.sort()
+print(missing[0])
+print(missing[1])
