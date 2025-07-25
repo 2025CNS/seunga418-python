@@ -1,26 +1,27 @@
-from collections import deque
-def min_operations(N):
+import heapq
+import math
+def solve(N):
     if N == 1:
         return 0
-    visited = set()
-    queue = deque()
-    queue.append((1, 0))
-    while queue:
-        current, steps = queue.popleft()
+    visited = {}
+    heap = []
+    heapq.heappush(heap, (0, 1))
+    while heap:
+        ops, current = heapq.heappop(heap)
         if current == N:
-            return steps
-        if current + 1 not in visited and current + 1 <= N:
-            visited.add(current + 1)
-            queue.append((current + 1, steps + 1))
-        if current > 1 and current - 1 not in visited:
-            visited.add(current - 1)
-            queue.append((current - 1, steps + 1))
+            return ops
+        if current in visited and visited[current] <= ops:
+            continue
+        visited[current] = ops
+        if current + 1 <= N:
+            heapq.heappush(heap, (ops + 1, current + 1))
+        if current > 1:
+            heapq.heappush(heap, (ops + 1, current - 1))
+        max_k = 64
         power = current * current
         while power <= N:
-            if power not in visited:
-                visited.add(power)
-                queue.append((power, steps + 1))
+            heapq.heappush(heap, (ops + 1, power))
+            if current == 1:
+                break
             power *= current
     return -1
-N = int(input())
-print(min_operations(N))
